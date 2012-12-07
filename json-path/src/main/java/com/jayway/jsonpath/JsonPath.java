@@ -22,9 +22,11 @@ import com.jayway.jsonpath.internal.filter.PathTokenFilter;
 import com.jayway.jsonpath.spi.HttpProviderFactory;
 import com.jayway.jsonpath.spi.JsonProvider;
 import com.jayway.jsonpath.spi.JsonProviderFactory;
-import org.apache.commons.lang.StringUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +34,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang.Validate.*;
 
 /**
  * <p/>
@@ -110,9 +111,6 @@ public class JsonPath {
             throw new InvalidPathException("Invalid path");
         }
 
-        int filterCountInPath = StringUtils.countMatches(jsonPath, "[?]");
-        isTrue(filterCountInPath == filters.length, "Filters in path ([?]) does not match provided filters.");
-
         this.tokenizer = new PathTokenizer(jsonPath);
         this.filters = new LinkedList<Filter>();
         this.filters.addAll(asList(filters));
@@ -174,7 +172,8 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public <T> T read(Object jsonObject) {
-        notNull(jsonObject, "json can not be null");
+        if (jsonObject == null)
+            throw new IllegalArgumentException("Json object can not be null!");
 
         if (!(jsonObject instanceof Map) && !(jsonObject instanceof List)) {
             throw new IllegalArgumentException("Invalid container object");
@@ -206,7 +205,8 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public <T> T read(String json) {
-        notEmpty(json, "json can not be null or empty");
+        if (json == null || json.isEmpty())
+            throw new IllegalArgumentException("Json can not be null or empty!");
 
         return (T) read(JsonProviderFactory.createProvider().parse(json));
     }
@@ -221,7 +221,8 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public <T> T read(URL jsonURL) throws IOException {
-        notNull(jsonURL, "json URL can not be null");
+        if (jsonURL == null)
+            throw new IllegalArgumentException("Json URL can not be null!");
 
         InputStream in = null;
         try {
@@ -242,8 +243,8 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public <T> T read(File jsonFile) throws IOException {
-        notNull(jsonFile, "json file can not be null");
-        isTrue(jsonFile.exists(), "json file does not exist");
+        if (jsonFile == null || !jsonFile.exists())
+            throw new IllegalArgumentException("Json file can not be null or not exists!");
 
         FileInputStream fis = null;
         try {
@@ -264,7 +265,8 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public <T> T read(InputStream jsonInputStream) throws IOException {
-        notNull(jsonInputStream, "json input stream can not be null");
+        if (jsonInputStream == null)
+            throw new IllegalArgumentException("Json input stream can not be null!");
 
         try {
             return (T) read(JsonProviderFactory.createProvider().parse(jsonInputStream));
@@ -287,7 +289,8 @@ public class JsonPath {
      * @return compiled JsonPath
      */
     public static JsonPath compile(String jsonPath, Filter... filters) {
-        notEmpty(jsonPath, "json can not be null or empty");
+        if (jsonPath == null || jsonPath.isEmpty())
+            throw new IllegalArgumentException("Json can not be null or empty!");
 
         return new JsonPath(jsonPath, filters);
     }
@@ -310,8 +313,10 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public static <T> T read(String json, String jsonPath, Filter... filters) {
-        notEmpty(json, "json can not be null or empty");
-        notEmpty(jsonPath, "jsonPath can not be null or empty");
+        if (json == null)
+            throw new IllegalArgumentException("Json can not be null or empty!");
+        if (jsonPath == null)
+            throw new IllegalArgumentException("Jsonpath can not be null or empty!");
 
         return (T) compile(jsonPath, filters).read(json);
     }
@@ -327,8 +332,10 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public static <T> T read(Object json, String jsonPath, Filter... filters) {
-        notNull(json, "json can not be null");
-        notNull(jsonPath, "jsonPath can not be null");
+        if (json == null)
+            throw new IllegalArgumentException("Json can not be null!");
+        if (jsonPath == null)
+            throw new IllegalArgumentException("Jsonpath can not be null!");
 
         return (T) compile(jsonPath, filters).read(json);
     }
@@ -344,8 +351,10 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public static <T> T read(URL jsonURL, String jsonPath, Filter... filters) throws IOException {
-        notNull(jsonURL, "json URL can not be null");
-        notEmpty(jsonPath, "jsonPath can not be null or empty");
+        if (jsonURL == null)
+            throw new IllegalArgumentException("Json URL can not be null!");
+        if (jsonPath == null)
+            throw new IllegalArgumentException("Jsonpath can not be null or empty!");
 
         return (T) compile(jsonPath, filters).read(jsonURL);
     }
@@ -361,8 +370,10 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public static <T> T read(File jsonFile, String jsonPath, Filter... filters) throws IOException {
-        notNull(jsonFile, "json file can not be null");
-        notEmpty(jsonPath, "jsonPath can not be null or empty");
+        if (jsonFile == null)
+            throw new IllegalArgumentException("Json file can not be null!");
+        if (jsonPath == null)
+            throw new IllegalArgumentException("Jsonpath can not be null or empty!");
 
         return (T) compile(jsonPath, filters).read(jsonFile);
     }
@@ -378,8 +389,10 @@ public class JsonPath {
      */
     @SuppressWarnings({"unchecked"})
     public static <T> T read(InputStream jsonInputStream, String jsonPath, Filter... filters) throws IOException {
-        notNull(jsonInputStream, "json input stream can not be null");
-        notEmpty(jsonPath, "jsonPath can not be null or empty");
+        if (jsonInputStream == null)
+            throw new IllegalArgumentException("Json input stream can not be null!");
+        if (jsonPath == null)
+            throw new IllegalArgumentException("Jsonpath can not be null or empty!");
 
         return (T) compile(jsonPath, filters).read(jsonInputStream);
     }

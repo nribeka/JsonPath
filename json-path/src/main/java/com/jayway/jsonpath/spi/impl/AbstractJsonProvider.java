@@ -15,8 +15,14 @@
 package com.jayway.jsonpath.spi.impl;
 
 import com.jayway.jsonpath.spi.JsonProvider;
-import org.apache.commons.lang.SerializationUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +33,8 @@ import java.util.Map;
 public abstract class AbstractJsonProvider implements JsonProvider {
 
     @Override
-    public Object clone(Object obj){
-        return SerializationUtils.clone((Serializable)obj);
+    public Object clone(Object obj) {
+        return SerializationUtils.clone((Serializable) obj);
     }
 
     /**

@@ -14,12 +14,15 @@
  */
 package com.jayway.jsonpath;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang.Validate.notEmpty;
-import static org.apache.commons.lang.Validate.notNull;
 
 /**
  * @author Kalle Stenflo
@@ -58,14 +61,12 @@ public class Criteria {
 
 
     private Criteria(String key) {
-        notEmpty(key, "key can not be null or empty");
         this.criteriaChain = new ArrayList<Criteria>();
         this.criteriaChain.add(this);
         this.key = key;
     }
 
     private Criteria(List<Criteria> criteriaChain, String key) {
-        notEmpty(key, "key can not be null or empty");
         this.criteriaChain = criteriaChain;
         this.criteriaChain.add(this);
         this.key = key;
@@ -374,7 +375,6 @@ public class Criteria {
       * @return
       */
     public Criteria in(Collection<?> c) {
-        notNull(c, "collection can not be null");
         criteria.put(CriteriaType.IN, c);
         return this;
     }
@@ -398,7 +398,6 @@ public class Criteria {
      * @return
      */
     public Criteria nin(Collection<?> c) {
-        notNull(c, "collection can not be null");
         criteria.put(CriteriaType.NIN, c);
         return this;
     }
@@ -420,7 +419,6 @@ public class Criteria {
      * @return
      */
     public Criteria all(Collection<?> c) {
-        notNull(c, "collection can not be null");
         criteria.put(CriteriaType.ALL, c);
         return this;
     }
@@ -454,7 +452,6 @@ public class Criteria {
      * @return
      */
     public Criteria type(Class<?> t) {
-        notNull(t, "type can not be null");
         criteria.put(CriteriaType.TYPE, t);
         return this;
     }
@@ -467,7 +464,6 @@ public class Criteria {
      * @return
      */
     public Criteria regex(Pattern pattern) {
-        notNull(pattern, "pattern can not be null");
         criteria.put(CriteriaType.REGEX, pattern);
         return this;
     }
