@@ -61,12 +61,18 @@ public class Criteria {
 
 
     private Criteria(String key) {
+        if (key == null || key.length() == 0)
+            throw new IllegalArgumentException("key can not be null or empty");
+
         this.criteriaChain = new ArrayList<Criteria>();
         this.criteriaChain.add(this);
         this.key = key;
     }
 
     private Criteria(List<Criteria> criteriaChain, String key) {
+        if (key == null || key.length() == 0)
+            throw new IllegalArgumentException("key can not be null or empty");
+
         this.criteriaChain = criteriaChain;
         this.criteriaChain.add(this);
         this.key = key;
@@ -375,6 +381,9 @@ public class Criteria {
       * @return
       */
     public Criteria in(Collection<?> c) {
+        if (c == null)
+            throw new IllegalArgumentException("collection can not be null");
+
         criteria.put(CriteriaType.IN, c);
         return this;
     }
@@ -398,6 +407,9 @@ public class Criteria {
      * @return
      */
     public Criteria nin(Collection<?> c) {
+        if (c == null)
+            throw new IllegalArgumentException("collection can not be null");
+
         criteria.put(CriteriaType.NIN, c);
         return this;
     }
@@ -419,6 +431,9 @@ public class Criteria {
      * @return
      */
     public Criteria all(Collection<?> c) {
+        if (c == null)
+            throw new IllegalArgumentException("collection can not be null");
+
         criteria.put(CriteriaType.ALL, c);
         return this;
     }
@@ -452,6 +467,9 @@ public class Criteria {
      * @return
      */
     public Criteria type(Class<?> t) {
+        if (t == null)
+            throw new IllegalArgumentException("type can not be null");
+
         criteria.put(CriteriaType.TYPE, t);
         return this;
     }
@@ -464,6 +482,9 @@ public class Criteria {
      * @return
      */
     public Criteria regex(Pattern pattern) {
+        if (pattern == null)
+            throw new IllegalArgumentException("pattern can not be null");
+
         criteria.put(CriteriaType.REGEX, pattern);
         return this;
     }
