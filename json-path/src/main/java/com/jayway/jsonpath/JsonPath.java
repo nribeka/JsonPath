@@ -104,11 +104,12 @@ public class JsonPath {
     private LinkedList<Filter> filters;
 
     public JsonPath(String jsonPath, Filter[] filters) {
-        if (jsonPath == null ||
-                jsonPath.trim().length() == 0 ||
-                jsonPath.matches("[^\\?\\+\\=\\-\\*\\/\\!]\\(")) {
+        if (jsonPath == null || jsonPath.trim().length() == 0) {
+            throw new InvalidPathException("Empty or null valued path passed to the path parser.");
+        }
 
-            throw new InvalidPathException("Invalid path");
+        if (jsonPath.matches("[^\\?\\+\\=\\-\\*\\/\\!]\\(")) {
+            throw new InvalidPathException("Invalid json path passed to the path parser. The path was: " + jsonPath);
         }
 
         this.tokenizer = new PathTokenizer(jsonPath);
