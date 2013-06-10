@@ -112,10 +112,32 @@ public class JsonPath {
             throw new InvalidPathException("Invalid json path passed to the path parser. The path was: " + jsonPath);
         }
 
+        int filterCountInPath = countMatches(jsonPath, "[?]");
+        if (filterCountInPath != filters.length) {
+            throw new IllegalArgumentException("Filters in path ([?]) does not match provided filters.");
+        }
+
         this.tokenizer = new PathTokenizer(jsonPath);
         this.filters = new LinkedList<Filter>();
         this.filters.addAll(asList(filters));
 
+    }
+
+    boolean isEmpty(String str) {
+        return str == null || str.length() == 0;
+    }
+
+    int countMatches(String str, String sub) {
+        if (isEmpty(str) || isEmpty(sub)) {
+            return 0;
+        }
+        int count = 0;
+        int idx = 0;
+        while ((idx = str.indexOf(sub, idx)) != -1) {
+            count++;
+            idx += sub.length();
+        }
+        return count;
     }
 
     PathTokenizer getTokenizer(){
